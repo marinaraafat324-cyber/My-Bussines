@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Architekturbüro Benjamin & Partner</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f3f5 0%, #d4d9de 100%);
+      color: #222;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-weight: 900;
+      font-size: 2rem;
+      letter-spacing: 1.5px;
+      color: #0a1f44;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #0a1f44;
+      font-weight: 600;
+      font-size: 1.1rem;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.3s ease;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff6f61;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: #ff6f61;
+    }
+
+    .language-switcher button {
+      margin-left: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 25px;
+      background: #ff6f61;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0px 4px 12px rgba(255, 111, 97, 0.4);
+      transition: background 0.3s ease;
+    }
+
+    .language-switcher button:hover {
+      background: #e85c50;
+    }
+
+    main {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px -8px rgba(10, 31, 68, 0.15);
+      max-width: 900px;
+      margin: auto;
+      position: relative;
+      z-index: 10;
+      min-height: 600px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      color: #0a1f44;
+      font-weight: 700;
+      border-bottom: 3px solid #ff6f61;
+      display: inline-block;
+      margin-bottom: 16px;
+      padding-bottom: 4px;
+      font-size: 1.7rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    ul li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    ul li::before {
+      content: "◼";
+      display: inline-block;
+      color: #ff6f61;
+      margin-right: 12px;
+      font-size: 1.2rem;
+      transform: rotate(45deg);
+      /* diamond shape */
+    }
+
+    .contact-info p {
+      margin: 8px 0;
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    .contact-info strong {
+      color: #0a1f44;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 50px;
+      user-select: none;
+    }
+
+    /* --- 3D geometric shapes with CSS --- */
+    .geom-container {
+      position: fixed;
+      top: 30%;
+      right: 0;
+      width: 400px;
+      height: 180px;
+      perspective: 700px;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Cube */
+    .cube {
+      width: 60px;
+      height: 60px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: spinCube 15s linear infinite;
+      margin: auto;
+    }
+    .cube div {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ff6f61, #ff9376);
+      border: 2px solid #e04a3f;
+      opacity: 0.95;
+      box-shadow: 0 3px 8px rgba(224,74,63,0.5);
+    }
+    .cube .front  { transform: translateZ(30px); }
+    .cube .back   { transform: rotateY(180deg) translateZ(30px); }
+    .cube .right  { transform: rotateY(90deg) translateZ(30px); }
+    .cube .left   { transform: rotateY(-90deg) translateZ(30px); }
+    .cube .top    { transform: rotateX(90deg) translateZ(30px); }
+    .cube .bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+    @keyframes spinCube {
+      0%   { transform: rotateX(0) rotateY(0); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    /* Pyramid */
+    .pyramid {
+      width: 60px;
+      height: 60px;
+      position: relative;
+      transform-style: preserve-3d;
+      transform-origin: bottom center;
+      animation: spinPyramid 12s linear infinite;
+      margin: auto;
+    }
+    .pyramid div {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      opacity: 0.9;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    }
+    .pyramid .base {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #4a90e2, #6ab7ff);
+      position: absolute;
+      bottom: 0;
+      transform: rotateX(90deg);
+      border: 2px solid #1768c0;
+      box-shadow: 0 2px 6px rgba(23,104,192,0.5);
+    }
+    .pyramid .side1 {
+      border-width: 0 30px 52px 30px;
+      border-color: transparent transparent #4a90e2 transparent;
+      transform: translateZ(10px) rotateX(25deg);
+    }
+    .pyramid .side2 {
+      border-width: 0 30px 52px 30px;
+      border-color: transparent transparent #357abd transparent;
+      transform: rotateY(90deg) translateZ(10px) rotateX(25deg);
+    }
+    .pyramid .side3 {
+      border-width: 0 30px 52px 30px;
+      border-color: transparent transparent #2d5b8a transparent;
+      transform: rotateY(180deg) translateZ(10px) rotateX(25deg);
+    }
+    .pyramid .side4 {
+      border-width: 0 30px 52px 30px;
+      border-color: transparent transparent #355c8a transparent;
+      transform: rotateY(-90deg) translateZ(10px) rotateX(25deg);
+    }
+
+    @keyframes spinPyramid {
+      0%   { transform: rotateY(0) rotateX(0); }
+      100% { transform: rotateY(360deg) rotateX(360deg); }
+    }
+
+    /* Hexagonal prism (approx) */
+    .hex-prism {
+      width: 60px;
+      height: 60px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: spinHex 18s linear infinite;
+      margin: auto;
+    }
+    .hex-prism .face {
+      position: absolute;
+      width: 60px;
+      height: 35px;
+      background: linear-gradient(135deg, #ffcc00, #ffdb4a);
+      border: 2px solid #ccaa00;
+      opacity: 0.9;
+      box-shadow: 0 3px 6px rgba(204,170,0,0.5);
+    }
+    .hex-prism .face1 { transform: rotateY(0deg) translateZ(30px); }
+    .hex-prism .face2 { transform: rotateY(60deg) translateZ(30px); }
+    .hex-prism .face3 { transform: rotateY(120deg) translateZ(30px); }
+    .hex-prism .face4 { transform: rotateY(180deg) translateZ(30px); }
+    .hex-prism .face5 { transform: rotateY(240deg) translateZ(30px); }
+    .hex-prism .face6 { transform: rotateY(300deg) translateZ(30px); }
+
+    @keyframes spinHex {
+      0%   { transform: rotateX(0) rotateY(0); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      main {
+        padding: 20px 15px;
+        min-height: auto;
+      }
+      header {
+        justify-content: center;
+        gap: 10px;
+      }
+      .language-switcher {
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+      }
+      .geom-container {
+        display: none; /* hide shapes on small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 id="title">Architekturbüro Benjamin & Partner</h1>
+  <nav>
+    <a href="#about" id="nav-about">About</a>
+    <a href="#services" id="nav-services">Services</a>
+    <a href="#contact" id="nav-contact">Contact</a>
+  </nav>
+  <div class="language-switcher">
+    <button onclick="switchLang('en')">EN</button>
+    <button onclick="switchLang('de')">DE</button>
+  </div>
+</header>
+
+<main>
+  <section id="about">
+    <h2 id="about-title">About</h2>
+    <p id="about-text">Ayoub Benjamin - Architect, Master of Arts, Diplom Ingenieur</p>
+  </section>
+
+  <section id="services">
+    <h2 id="services-title">Services</h2>
+    <ul id="services-list">
+      <!-- Services will be loaded here -->
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2 id="contact-title">Contact</h2>
+    <div class="contact-info">
+      <p><strong id="mobile-label">Mobile:</strong> <span id="mobile-text">+49 176 7070 8645</span></p>
+      <p><strong id="phone-label">Phone:</strong> <span id="phone-text">+49 4363 - 9055143</span></p>
+      <p><strong id="fax-label">Fax:</strong> <span id="fax-text">+49 4363 - 9055145</span></p>
+      <p><strong id="email-label">Email:</strong> <a id="email-link" href="mailto:architekt@benjamin.web.de">architekt@benjamin.web.de</a></p>
+      <p><strong id="address-label">Address:</strong> <span id="address-text">Grünbek 39, 23738 Kabelhorst, Germany</span></p>
+      <p><strong id="tax-label">Tax ID:</strong> <span id="tax-text">Steuer Nr. 251/160780</span></p>
+      <p><strong id="hours-label">Working hours:</strong> <span id="hours-text">Mon - Fri 10:00 - 18:00</span></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; <span id="footer-year"></span> Architekturbüro Benjamin & Partner. All rights reserved.
+</footer>
+
+<!-- 3D Geometric shapes container -->
+<div class="geom-container" aria-hidden="true">
+  <!-- Cube -->
+  <div class="cube" aria-hidden="true">
+    <div class="front"></div>
+    <div class="back"></div>
+    <div class="right"></div>
+    <div class="left"></div>
+    <div class="top"></div>
+    <div class="bottom"></div>
+  </div>
+  <!-- Pyramid -->
+  <div class="pyramid" aria-hidden="true">
+    <div class="base"></div>
+    <div class="side1"></div>
+    <div class="side2"></div>
+    <div class="side3"></div>
+    <div class="side4"></div>
+  </div>
+  <!-- Hexagonal prism -->
+  <div class="hex-prism" aria-hidden="true">
+    <div class="face face1"></div>
+    <div class="face face2"></div>
+    <div class="face face3"></div>
+    <div class="face face4"></div>
+    <div class="face face5"></div>
+    <div class="face face6"></div>
+  </div>
+</div>
+
+<script>
+  const content = {
+    en: {
+      title: "Architekturbüro Benjamin & Partner",
+      nav: { about: "About", services: "Services", contact: "Contact" },
+      about: {
+        title: "About",
+        text: "Ayoub Benjamin - Architect, Master of Arts, Diplom Ingenieur"
+      },
+      services: {
+        title: "Services",
+        list: [
+          "Building owner energy and material consulting",
+          "Building in existing stock and age-appropriate building",
+          "3D Visualization",
+          "Old building renovation",
+          "Expert and urban planner"
+        ]
+      },
+      contact: {
+        title: "Contact",
+        mobileLabel: "Mobile:",
+        mobileText: "+49 176 7070 8645",
+        phoneLabel: "Phone:",
+        phoneText: "+49 4363 - 9055143",
+        faxLabel: "Fax:",
+        faxText: "+49 4363 - 9055145",
+        emailLabel: "Email:",
+        emailText: "architekt@benjamin.web.de",
+        emailHref: "mailto:architekt@benjamin.web.de",
+        addressLabel: "Address:",
+        addressText: "Grünbek 39, 23738 Kabelhorst, Germany",
+        taxLabel: "Tax ID:",
+        taxText: "Steuer Nr. 251/160780",
+        hoursLabel: "Working hours:",
+        hoursText: "Mon - Fri 10:00 - 18:00"
+      }
+    },
+    de: {
+      title: "Architekturbüro Benjamin & Partner",
+      nav: { about: "Über uns", services: "Dienstleistungen", contact: "Kontakt" },
+      about: {
+        title: "Über uns",
+        text: "Ayoub Benjamin - Architekt, Master of Arts, Diplom Ingenieur"
+      },
+      services: {
+        title: "Dienstleistungen",
+        list: [
+          "Bauherren Energie- und Baustoffberatung",
+          "Bauen im Bestand und altersgerechtes Bauen",
+          "3D Visualisierung",
+          "Altbausanierung",
+          "Gutachter und Stadtplaner"
+        ]
+      },
+      contact: {
+        title: "Kontakt",
+        mobileLabel: "Mobil:",
+        mobileText: "+49 176 7070 8645",
+        phoneLabel: "Telefon:",
+        phoneText: "+49 4363 - 9055143",
+        faxLabel: "Fax:",
+        faxText: "+49 4363 - 9055145",
+        emailLabel: "E-Mail:",
+        emailText: "architekt@benjamin.web.de",
+        emailHref: "mailto:architekt@benjamin.web.de",
+        addressLabel: "Adresse:",
+        addressText: "Grünbek 39, 23738 Kabelhorst, Deutschland",
+        taxLabel: "Steuer Nr.:",
+        taxText: "251/160780",
+        hoursLabel: "Öffnungszeiten:",
+        hoursText: "Mo - Fr 10:00 - 18:00 Uhr"
+      }
+    }
+  };
+
+  function switchLang(lang) {
+    const data = content[lang];
+
+    document.documentElement.lang = lang;
+    document.getElementById("title").textContent = data.title;
+    document.getElementById("nav-about").textContent = data.nav.about;
+    document.getElementById("nav-services").textContent = data.nav.services;
+    document.getElementById("nav-contact").textContent = data.nav.contact;
+
+    document.getElementById("about-title").textContent = data.about.title;
+    document.getElementById("about-text").textContent = data.about.text;
+
+    document.getElementById("services-title").textContent = data.services.title;
+    const servicesListEl = document.getElementById("services-list");
+    servicesListEl.innerHTML = "";
+    data.services.list.forEach((svc) => {
+      const li = document.createElement("li");
+      li.textContent = svc;
+      servicesListEl.appendChild(li);
+    });
+
+    document.getElementById("contact-title").textContent = data.contact.title;
+    document.getElementById("mobile-label").textContent = data.contact.mobileLabel;
+    document.getElementById("mobile-text").textContent = data.contact.mobileText;
+    document.getElementById("phone-label").textContent = data.contact.phoneLabel;
+    document.getElementById("phone-text").textContent = data.contact.phoneText;
+    document.getElementById("fax-label").textContent = data.contact.faxLabel;
+    document.getElementById("fax-text").textContent = data.contact.faxText;
+    document.getElementById("email-label").textContent = data.contact.emailLabel;
+    const emailLink = document.getElementById("email-link");
+    emailLink.textContent = data.contact.emailText;
+    emailLink.href = data.contact.emailHref;
+    document.getElementById("address-label").textContent = data.contact.addressLabel;
+    document.getElementById("address-text").textContent = data.contact.addressText;
+    document.getElementById("tax-label").textContent = data.contact.taxLabel;
+    document.getElementById("tax-text").textContent = data.contact.taxText;
+    document.getElementById("hours-label").textContent = data.contact.hoursLabel;
+    document.getElementById("hours-text").textContent = data.contact.hoursText;
+  }
+
+  window.onload = () => {
+    switchLang("en");
+    document.getElementById("footer-year").textContent = new Date().getFullYear();
+  };
+</script>
+
+</body>
+</html>
